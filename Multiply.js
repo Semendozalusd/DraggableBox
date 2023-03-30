@@ -1,4 +1,18 @@
+// Create iframe
+var iframe = document.createElement("iframe");
+iframe.style.position = "fixed";
+iframe.style.top = "50%;
+iframe.style.left = "50%";
+iframe.style.transform = "translate(-50%, -50%)";
+iframe.style.backgroundColor = "#ffffff";
+iframe.style.padding = "20px";
+iframe.style.boxShadow = "0px 0px 10px rgba(0,0,0,0.5)";
+iframe.setAttribute("sandbox", "allow-scripts");
+document.body.appendChild(iframe);
+
+// Wait for iframe to load before accessing its contents
 iframe.onload = function() {
+  // Create multiplication table
   var table = "<table>";
   for (var i = 1; i <= 12; i++) {
     table += "<tr>";
@@ -56,4 +70,6 @@ iframe.onload = function() {
       }
     });
   }
-};
+}
+// Set iframe source
+iframe.src = 'data:text/html;charset=utf-8,' + encodeURI("<html><head><title>Multiplication Table</title></head><body></body></html>");
