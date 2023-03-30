@@ -1,75 +1,59 @@
-// Create iframe
-var iframe = document.createElement("iframe");
-iframe.style.position = "fixed";
-iframe.style.top = "50%";
-iframe.style.left = "50%";
-iframe.style.transform = "translate(-50%, -50%)";
-iframe.style.backgroundColor = "#ffffff";
-iframe.style.padding = "20px";
-iframe.style.boxShadow = "0px 0px 10px rgba(0,0,0,0.5)";
-iframe.setAttribute("sandbox", "allow-scripts");
-document.body.appendChild(iframe);
-
-// Wait for iframe to load before accessing its contents
-iframe.onload = function() {
-  // Create multiplication table
-  var table = "<table>";
+javascript:(function(){
+  var chartDiv = document.createElement('div');
+  chartDiv.style.position = 'fixed';
+  chartDiv.style.top = '50px';
+  chartDiv.style.left = '50px';
+  chartDiv.style.backgroundColor = '#fff';
+  chartDiv.style.border = '1px solid #ccc';
+  chartDiv.style.padding = '10px';
+  chartDiv.style.zIndex = '9999';
+  var table = document.createElement('table');
+  table.style.width = '100%';
+  table.style.tableLayout = 'fixed';
+  table.style.borderCollapse = 'collapse';
   for (var i = 1; i <= 12; i++) {
-    table += "<tr>";
+    var row = document.createElement('tr');
     for (var j = 1; j <= 12; j++) {
-      var cellClass = "";
-      if (i === 1) {
-        cellClass = "x" + j;
+      var cell = document.createElement('td');
+      cell.style.padding = '5px';
+      cell.style.border = '1px solid #ccc';
+      cell.style.textAlign = 'center';
+      if (i === 1 || j === 1) {
+        cell.style.backgroundColor = '#eee';
       }
-      if (j === 1) {
-        cellClass += " y" + i;
+      if (i === 1 && j > 1) {
+        cell.innerHTML = j - 1;
       }
-      table += "<td class='" + cellClass + "'>" + (i * j) + "</td>";
+      if (j === 1 && i > 1) {
+        cell.innerHTML = i - 1;
+      }
+      if (i > 1 && j > 1) {
+        cell.innerHTML = (i - 1) * (j - 1);
+      }
+      cell.addEventListener('mouseover', function() {
+        var rowCells = this.parentNode.childNodes;
+        for (var k = 0; k < rowCells.length; k++) {
+          rowCells[k].style.backgroundColor = '#f5f5f5';
+        }
+        var columnCells = table.querySelectorAll('tr td:nth-child(' + (this.cellIndex + 1) + ')');
+        for (var l = 0; l < columnCells.length; l++) {
+          columnCells[l].style.backgroundColor = '#f5f5f5';
+        }
+      });
+      cell.addEventListener('mouseout', function() {
+        var rowCells = this.parentNode.childNodes;
+        for (var k = 0; k < rowCells.length; k++) {
+          rowCells[k].style.backgroundColor = '';
+        }
+        var columnCells = table.querySelectorAll('tr td:nth-child(' + (this.cellIndex + 1) + ')');
+        for (var l = 0; l < columnCells.length; l++) {
+          columnCells[l].style.backgroundColor = '';
+        }
+      });
+      row.appendChild(cell);
     }
-    table += "</tr>";
+    table.appendChild(row);
   }
-  table += "</table>";
-  iframe.contentDocument.body.innerHTML = table;
-
-  // Add close button
-  var closeButton = document.createElement("button");
-  closeButton.innerHTML = "X";
-  closeButton.style.position = "absolute";
-  closeButton.style.top = "5px";
-  closeButton.style.right = "5px";
-  closeButton.addEventListener("click", function() {
-    iframe.remove();
-  });
-  iframe.contentDocument.body.appendChild(closeButton);
-
-  // Highlight row and column on mouseover
-  var cells = iframe.contentDocument.getElementsByTagName("td");
-  for (var i = 0; i < cells.length; i++) {
-    cells[i].addEventListener("mouseover", function() {
-      var rowClass = this.classList[0];
-      var colClass = this.classList[1];
-      var rows = iframe.contentDocument.getElementsByClassName(rowClass);
-      var cols = iframe.contentDocument.getElementsByClassName(colClass);
-      for (var j = 0; j < rows.length; j++) {
-        rows[j].style.backgroundColor = "yellow";
-      }
-      for (var j = 0; j < cols.length; j++) {
-        cols[j].style.backgroundColor = "yellow";
-      }
-    });
-    cells[i].addEventListener("mouseout", function() {
-      var rowClass = this.classList[0];
-      var colClass = this.classList[1];
-      var rows = iframe.contentDocument.getElementsByClassName(rowClass);
-      var cols = iframe.contentDocument.getElementsByClassName(colClass);
-      for (var j = 0; j < rows.length; j++) {
-        rows[j].style.backgroundColor = "";
-      }
-      for (var j = 0; j < cols.length; j++) {
-        cols[j].style.backgroundColor = "";
-      }
-    });
-  }
-}
-// Set iframe source
-iframe.src = 'data:text/html;charset=utf-8,' + encodeURI("<html><head><title>Multiplication Table</title></head><body></body></html>");
+  chartDiv.appendChild(table);
+  document.body.appendChild(chartDiv);
+})();
