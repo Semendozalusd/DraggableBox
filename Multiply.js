@@ -1,7 +1,7 @@
 // Create iframe
 var iframe = document.createElement("iframe");
 iframe.style.position = "fixed";
-iframe.style.top = "50%;
+iframe.style.top = "50%";
 iframe.style.left = "50%";
 iframe.style.transform = "translate(-50%, -50%)";
 iframe.style.backgroundColor = "#ffffff";
